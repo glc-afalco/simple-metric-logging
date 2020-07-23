@@ -6,7 +6,7 @@ node install via https://nodejs.org/en/download/
 
 ## Usage
 ```
-$ git clone https://github.com/Aud123/riot.git
+$ git clone https://github.com/Aud123/simple-metric-logging.git
 $ npm install
 $ node server.js
 ```
