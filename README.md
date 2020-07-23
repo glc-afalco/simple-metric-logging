@@ -1,5 +1,5 @@
-# time-series windows calculation
-riot is a JS program dealing with sum calcs of log values over flotting time widows. In that instance, the current hour.
+# Simple metric logging
+Simple metric logging is a JS program dealing with sum calcs of log values over flotting time widows. In that instance, the current hour.
 
 ## Installation
 node install via https://nodejs.org/en/download/
