@@ -28,6 +28,8 @@ var metricsModule = function () {
                 value = _sumModel(modelToSum)
             }
             res.status(200).send({ value })
+        } else {
+            res.status(200).send({ "value": 0 })
         }
     }
 
