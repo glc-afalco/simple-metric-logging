@@ -7,7 +7,7 @@ module.exports = (app) => {
         next();
     });
 
-    let MetricsModule = require('../modules/metrics.modules')
+    let MetricsModule = require('../modules/metrics.module')
     let metricsModule = new MetricsModule()
 
     app.post('/metrics/:key', (req, res) => {

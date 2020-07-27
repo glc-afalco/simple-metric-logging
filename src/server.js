@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-require('./routes/metrics.routes.js')(app);
+require('./routes/metrics.route.js')(app);
 
 const port = 3001;
 
