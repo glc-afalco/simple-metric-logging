@@ -11,11 +11,14 @@ module.exports = (app) => {
     let metricsModule = new MetricsModule()
 
     app.post('/metrics/:key', (req, res) => {
-        res.send(metricsModule.addMetric(req, res))
+        let key = req.params.key
+        let value = req.body.value
+        res.status(200).send({ status: metricsModule.addMetric(key, value) })
     });
 
     app.get('/metrics/:key/sum', (req, res) => {
-        res.send(metricsModule.sumMetric(req, res))
+        let key = req.params.key
+        res.status(200).send({ value: metricsModule.sumMetric(key) });
     });
 
 }

@@ -2,22 +2,22 @@ const fs = require('fs')
 
 var metricsModule = function () {
 
-    this.addMetric = (req, res) => {
-        let isModelExistent = _checkModelExist(req.params.key + '.json')
+    this.addMetric = (key, value) => {
+        let isModelExistent = _checkModelExist(key + '.json')
         if (isModelExistent) {
-            _validateModel(req)
+            _validateModel(key, value)
         } else {
-            _createModel(req.body.value).then((model) => {
-                _writeModel(model, req.params.key + '.json')
+            _createModel(value).then((model) => {
+                _writeModel(model, key + '.json')
             })
         }
-        res.status(200).send({});
+        return {};
     }
 
-    this.sumMetric = (req, res) => {
-        let isModelExistent = _checkModelExist(req.params.key + '.json')
+    this.sumMetric = (key) => {
+        let isModelExistent = _checkModelExist(key + '.json')
         if (isModelExistent) {
-            let modelToSum = JSON.parse(fs.readFileSync(req.params.key + '.json'))
+            let modelToSum = JSON.parse(fs.readFileSync(key + '.json'))
             let incomingTimestamp = new Date(Date.now())
             let currentTimestamp = new Date(modelToSum.index["0_timestamp"])
             let incomingHour = Math.floor(incomingTimestamp / (1000 * 60 * 60))
@@ -27,9 +27,9 @@ var metricsModule = function () {
             if (hourDiff <= 1) {
                 value = _sumModel(modelToSum)
             }
-            res.status(200).send({ value })
+            return value
         } else {
-            res.status(200).send({ "value": 0 })
+            return 0
         }
     }
 
@@ -59,8 +59,8 @@ var metricsModule = function () {
         }
     }
 
-    const _validateModel = (req) => {
-        _readModel(req.params.key + '.json').then((model) => {
+    const _validateModel = (key, value) => {
+        _readModel(key + '.json').then((model) => {
             let incomingTimestamp = new Date(Date.now())
             let currentTimestamp = new Date(model.index["0_timestamp"])
             let incomingHour = Math.floor(incomingTimestamp / (1000 * 60 * 60))
@@ -68,21 +68,21 @@ var metricsModule = function () {
             let incomingMinute = new Date(1000 * Math.round(incomingTimestamp / 1000)).getMinutes()
             let hourDiff = incomingHour - currentHour
             if (incomingHour !== currentHour && hourDiff > 1) {
-                _deleteModel(req.params.key + '.json').then(() => {
-                    _createModel(req.body.value).then((model) => { _writeModel(model, req.params.key) })
+                _deleteModel(key + '.json').then(() => {
+                    _createModel(value).then((model) => { _writeModel(model, key + '.json') })
                 })
             } else if (incomingHour !== currentHour && hourDiff <= 1) {
                 let temp = model.data["0"]
-                _createModel(req.body.value).then((newModel) => {
+                _createModel(value).then((newModel) => {
                     newModel.data["-1"] = temp
-                    _deleteModel(req.params.key + '.json').then(() => {
-                        _writeModel(newModel, req.params.key + '.json')
+                    _deleteModel(key + '.json').then(() => {
+                        _writeModel(newModel, key + '.json')
                     })
                 })
             } else {
-                model.data["0"][incomingMinute] = model.data["0"][incomingMinute] + req.body.value
-                _deleteModel(req.params.key + '.json').then(() => {
-                    _writeModel(model, req.params.key + '.json')
+                model.data["0"][incomingMinute] = model.data["0"][incomingMinute] + value
+                _deleteModel(key + '.json').then(() => {
+                    _writeModel(model, key + '.json')
                 })
             }
         })
