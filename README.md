@@ -8,10 +8,15 @@ node install via https://nodejs.org/en/download/
 ```
 $ git clone https://github.com/Aud123/simple-metric-logging.git
 $ npm install
-$ node server.js
+$ node server.js OR npm start form root directory
 ```
 
 ## Test
+You can use the command below to run tests:
+```
+$ npm test
+```
+
 ### POST
 
 ```
